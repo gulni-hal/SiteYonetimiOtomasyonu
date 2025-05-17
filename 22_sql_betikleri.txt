@@ -1,0 +1,515 @@
+CREATE TABLE bloklar (
+    blok_id INT AUTO_INCREMENT PRIMARY KEY,
+    blok_adi ENUM('A', 'B', 'C') NOT NULL,
+    kat_sayisi INT NOT NULL
+);
+
+CREATE TABLE daireler (
+    daire_id INT AUTO_INCREMENT PRIMARY KEY,
+    blok_id INT NOT NULL,
+    daire_numarasi INT NOT NULL,
+    FOREIGN KEY (blok_id) REFERENCES bloklar(blok_id)
+);
+
+CREATE TABLE sakinler (
+    sakin_id INT AUTO_INCREMENT PRIMARY KEY,
+    ad_soyad VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    numara VARCHAR(20),
+    kayit_tarihi DATE,
+    kullanici_adi VARCHAR(50) UNIQUE,
+    sifre VARCHAR(255),
+    daire_id INT,
+    FOREIGN KEY (daire_id) REFERENCES daireler(daire_id)
+);
+
+CREATE TABLE duyurular (
+    duyuru_id INT AUTO_INCREMENT PRIMARY KEY,
+    baslik VARCHAR(255) NOT NULL,
+    icerik TEXT NOT NULL,
+    tarih DATETIME NOT NULL,
+    hedef_blok_id INT, 
+    FOREIGN KEY (hedef_blok_id) REFERENCES bloklar(blok_id)
+);
+
+CREATE TABLE basvurular (
+    basvuru_id INT AUTO_INCREMENT PRIMARY KEY,
+    sakin_id INT,
+    tur ENUM('Oneri', 'Talep', 'Sikayet'),
+    icerik TEXT,
+    tarih DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sakin_id) REFERENCES sakinler(sakin_id)
+);
+
+CREATE TABLE aidatlar (
+    aidat_id INT AUTO_INCREMENT PRIMARY KEY,
+    daire_id INT NOT NULL,
+    ay_yil VARCHAR(7) NOT NULL,
+    durum ENUM('Ödendi', 'Ödenmedi') DEFAULT 'Ödenmedi',
+    FOREIGN KEY (daire_id) REFERENCES daireler(daire_id)
+);
+
+CREATE TABLE personel (
+    personel_id INT AUTO_INCREMENT PRIMARY KEY,
+    sakin_id INT NOT NULL, 
+    pozisyon ENUM('Yonetici') NOT NULL,
+    blok_id INT,
+    FOREIGN KEY (sakin_id) REFERENCES sakinler(sakin_id),
+    FOREIGN KEY (blok_id) REFERENCES bloklar(blok_id)
+);
+
+
+INSERT INTO bloklar (blok_adi, kat_sayisi) VALUES
+('A', 5),
+('B', 5),
+('C', 5);
+
+
+INSERT INTO daireler (blok_id, daire_numarasi) VALUES
+(1, 1), (1, 2), (1, 3), (1, 4), (1, 5),
+(1, 6), (1, 7), (1, 8), (1, 9), (1, 10),
+(1, 11), (1, 12), (1, 13), (1, 14), (1, 15);
+
+
+INSERT INTO daireler (blok_id, daire_numarasi) VALUES
+(2, 1), (2, 2), (2, 3), (2, 4), (2, 5),
+(2, 6), (2, 7), (2, 8), (2, 9), (2, 10),
+(2, 11), (2, 12), (2, 13), (2, 14), (2, 15);
+
+
+INSERT INTO daireler (blok_id, daire_numarasi) VALUES
+(3, 1), (3, 2), (3, 3), (3, 4), (3, 5),
+(3, 6), (3, 7), (3, 8), (3, 9), (3, 10),
+(3, 11), (3, 12), (3, 13), (3, 14), (3, 15);
+
+
+
+
+INSERT INTO sakinler (ad_soyad, email, numara, kayit_tarihi, kullanici_adi, sifre, daire_id) VALUES
+('Ece Aslan', 'ece.aslan@gmail.com', '05551234567', '2020-05-03', 'ece_aslan1', 'Su_perisi33', 16),
+('Ali Aslan', 'ali.aa@gmail.com', '055982645637', '2020-05-03', 'ali_aslan', 'deliyiMm125', 16),
+('Hacer Ozer', 'hacerr21@outlook.com', '05590345867', '2020-12-07', 'hacoo6', 'Hac_sif456', 17),
+('Lale Ozer', 'lalee.ozer@gmail.com', '05952397581', '2019-12-07', 'lalecik', 'llz1903Ozr', 17),
+('Suzan Karahan', 'suzan1@outlook.com', '05295378108', '2019-12-07', 'SuzanEr', 'Ay_Rif60', 17),
+('Kaan Demir', 'kaaaan.demir@outlook.com', '05391820739', '2021-09-04', 'Demir_kaan', 'kaAnGS234', 18),
+('Fatih Demir', 'fatih.demir@gmail.com', '05648235640', '2021-11-13', 'fatih_demir', 'Fatoo_de1', 18),
+('Eylul Demir', 'zeynep.se@gmail.com', '05284610897', '2021-09-04', 'eyluuul3', 'EylU_Umu34', 18),
+('Rana Erdem', 'rana.er45@gmail.com', '05329562730', '2024-01-05', 'rana_ev', 'RaNa_456', 19),
+('Ruken Yılmaz', 'rakunn@outlook.com', '05329056384', '2024-01-05', 'ruken_site', 'dursun_Zaman', 19),
+('Naci Bekir', 'aslann.naci@gmail.com', '05551234567', '2024-01-05', 'naci_bek234', 'akBaba0810', 20),
+('Mert Bekir', 'mertt56@gmail.com', '05639104789', '2024-01-05', 'mert_12', 'memOo4104', 20),
+('Talha Yaman', 'yaman.talha@outlook.com', '05296147830', '2018-09-18', 'yaman_talha', 'leve45Tepe', 21),
+('Eda Yaman', 'eda.yaman@gmail.com', '05346719203', '2018-09-18', 'edaa123', 'edebayattt09', 21),
+('Ecrin Yaman', 'ecrin34@gmail.com', '05346182094', '2018-09-18', 'ecrin_yam', 'Eco456Ya', 21),
+('Gülnihal Eruslu', 'gulni.eruslu@gmail.com', '05249174560', '2023-04-01', 'gulni.eruslu', 'Parola123.', 22),
+('Şaheste Yalın', 'sahestee1@gmail.com', '05523856714', '2023-04-01', 'sahiste_yal', 'Fav_Birey65', 22),
+('Zeynep Uzunçakmak', 'zeynep.cnmm@gmail.com', '05289104837', '2024-12-06', 'mimozaaa', 'Man_Efe52', 23),
+('Efe Uzunçakmak', 'efe.mani@gmail.com', '05289104837', '2024-12-06', 'efe_uzunc', 'Man_Zey18', 23),
+('Oya Kaya', 'oyyyaa1@gmail.com', '05238156730', '2018-10-26', 'oyyyaa_k', 'OyyumGoz123', 24),
+('Irmak Kaya', 'kaya56@outlook.com', '05245185603', '2018-10-26', 'irmak.kaya', 'IrmakLARdur3', 24),
+('Kamil Kaya', 'kamil.ka56@outlook.com', '05237591048', '2020-04-21', 'kaya1_kam', 'Kamil_boy34', 24),
+('İrem Taflancı', 'iremcik.taf@gmail.com', '05247184028', '2021-11-18', 'irem_nur', 'Acil_ins54', 25),
+('Hakan Turgut', 'hakaan47@gmail.com', '05289104567', '2021-11-18', 'HAkTurgut', 'Men_Fen4535', 26),
+('Mahir Turgut', 'maahir.tt@outlook.com', '05156724395', '2021-11-18', 'mahirtur1', 'Hapis_cik34', 26),
+('Hamza Turgut', 'hamze.turgut1@gmail.com', '05648123850', '2023-02-08', 'hamzaa.tur', 'sifHam33.', 26),
+('Polat Merak', 'polat2@gmail.com', '05418936420', '2020-09-20', 'Merak_polat', 'Kurt.vadi1', 27),
+('Hüseyin Merak', 'huso45@outlook.com', '05281647230', '2020-09-20', 'Husooo123', 'Mera_ne567', 27),
+('Ayşenur Karahan', 'aysee.nur@gmail.com', '05146723910', '2020-09-20', 'Ayse_Nur', 'fav_Sis45', 27),
+('Gamze Maltepe', 'gamze.merak45@outlook.com', '05238165480', '2020-09-20', 'gamzee_34', 'ev_Arkhos42', 27),
+('Almıla Erdoğan', 'almilamm.gokk@gmail.com', '05271450182', '2018-05-14', 'almila_erd', 'girs_Ardunio68', 28),
+('İrem Kalaycı', 'irem.ka2@outlook.com', '05184273910', '2024-08-10', 'irem.kalayci', 'ilg_Kocaeli07', 29),
+('Azra Akşahin', 'azracik@gmail.com', '05281452830', '2019-01-30', 'azraaa_ak', 'man_Tokat60', 29),
+('Ali Uzun', 'alii.uzun@outlook.com', '05218934017', '2022-03-04', 'ali_uzun1', 'Fav_eniste53', 30),
+('Fatma Uzun', 'fatma1.uzun@gmail.com', '05238146701', '2022-03-04', 'fatma.uzun', 'beTul_ablam06', 30),
+('Ertuğrul Uzun', 'erto@gmail.com', '05378934024', '2022-05-01', 'ertugrul_uz', 'abbbUzun34', 30),
+('Piraye Uzun', 'pirayyye.uzun@outlook.com', '05281549015', '2022-03-04', 'pirayee1', 'keDi_2fav34', 30),
+('Derya Öztürk', 'deryaaozturkk@gmail.com', '05462796458', '2025-05-10', 'deryaaozturkkA', 'deryamıdevamı05', 1),
+('Ayşe Öztürk', 'ayseeozturkk@gmail.com', '05573546194', '2025-05-10', 'ayseeozturkkA', 'ayseeninsifresi', 1),
+('Ali Salih Can', 'alisalihh@gmail.com', '05976186764', '2015-02-15', 'alisalihhA', 'alisalihcann', 2),
+('Nilay Can', 'nilayycann@gmail.com', '05642486975', '2015-02-15', 'nilayycannA', 'niloyaniloyaa', 2),
+('Aylin Can', 'aylinncann@gmail.com', '05783691547', '2015-02-15', 'aylinncannA', 'aylinciimm', 2),
+('Kadriye Can', 'kadriyeecann@gmail.com', '0546396751', '2015-02-15', 'kadriyeecannA', 'kadriyecannn', 2),
+('Ahmet Mete Öz', 'ahmetmeteee@gamil.com', '05550143562', '2022-12-25', 'ahmetmeteeA', 'ahmettistee', 3),
+('Aybüke Öz', 'aybükeozzz@gmail.com', '05432586545', '2022-12-25', 'aybukeeozzA', 'aybukecimmm', 3),
+('Lara Öz', 'laraozz@gamil.com', '05453692451', '2022-12-25', 'laraaozzA', 'laraaaisthequeenn', 3),
+('Mustafa Çoban', '1mustafacoban@gmail.com', '05524577868', '2030-06-16', 'mustafaacobanA', 'mustafaacobannn', 4),
+('Nilay Çoban', 'nilayycobann@gmail.com', '05525494505', '2030-06-16', 'nilayycobannA', 'nilayycobann', 4),
+('Hasan Yıldırım', 'hasanyıldırımm@gmail.com', '05326987542', '2017-04-20', 'hasannnyıldırımA', 'hasanyıldırımmm', 5),
+('Melis Yıldırım', 'melisssyıldırımm@gmail.com', '05243692132', '2017-04-20', 'melisyıldırımmA', 'melissyıldırmmAAA', 5),
+('Gül Su Yıldırım', 'gulsuuuu@gmail.com', '05223698545', '2017-04-20', 'gulsuuuyıldırımA', 'gulsuucummm', 5),
+('Hamit Süzer', 'hamittsuzerr@gmail.com', '', '2021-09-10', 'hamittsuzerrA', 'hamittsuzerrA', 6),
+('Fatma Süzer', 'fatmasuzerr@gmail.com', '05221476895', '2021-09-10', 'fatmaasuzerrA', 'fatmasuzer50', 6),
+('Adnan Süzer', 'adnansuzer@gmail.com', '05323168596', '2021-09-10', 'adnansuzerA', 'adnannnszr', 6),
+('Hüseyin Süzer', 'huseyinsuze@gmail.com', '05487596341', '2021-09-10', 'huseyinsuzerA', 'huseyinnnszr', 6),
+('İbrahim Süzer', 'ıbrahimsuzer@gmail.com', '05369874565', '2021-09-10', 'ibrahimsuzerA', 'ibrahimmszr', 6),
+('Hadise Açıkgöz', 'hadiseacıkgoz@gmail.com', '05245263146', '2019-02-01', 'hadiseacıkgozA', 'askkacbedengiyer', 7),
+('Hülya Açıkgöz', 'hulyaacıkgoz@gmail.com', '05453651202', '2019-02-01', 'hulyaacıkgozA', 'hulyaaacıkgozz', 7),
+('Asya Çelik', 'asyaacelik@gmail.com', '05312469878', '2020-10-10', 'asyacelikA', 'asyaacelik', 8),
+('Kadir Çelik', 'kadircelik@gmail.com', '05426875421', '2020-10-10', 'kadircelikA', 'kadircelikk', 8),
+('Erdem Oktay', 'erdemoktay@gmail.com', '05366485225', '2024-03-03', 'erdemoktayyA', 'erdemmoktay', 9),
+('Emir Demir', 'emirdemirr@gmail.com', '05302593652', '2024-03-03', 'emirdemirrA', 'emirrdemirr', 9),
+('İbrahim Arslan', 'ibrahimarslan@gmail.com', '05432589636', '2025-05-05', 'ibrahimarsA', 'ibrahimmarslan', 10),
+('Serap Arslan', 'serapparslan@gmail.com', '05486589325', '2025-05-05', 'seraparslanA', 'serapppars', 10),
+('Nida Arslan', 'nidaarslan@gmail.com', '05363125487', '2025-05-05', 'nidaarsA', 'nidaaars', 10),
+('Toprak Bulut', 'toprakbulut@gmail.com', '05446589325', '2023-01-01', 'toprakbulutA', 'toprakkbulut', 11),
+('Hilal Bulut', 'hilalbulut@gmail.com', '05050251436', '2023-01-01', 'hilalbulutA', 'hilalllblt', 11),
+('Aren Bulut', 'arenbulut@gmail.com', '05246581497', '2023-01-01', 'arennbulutA', 'arennbulutt', 11),
+('Mehmet Ağral', 'mehmetagral@gmail.com', '05332451626', '2018-05-07', 'mehmetagralA', 'mehmettagrall', 12),
+('Şadiye Ağral', 'sadiyeagral@gmail.com', '05446987141', '2018-05-07', 'sadiyeagral', 'sadiyeee', 12),
+('Fatma Ağral', 'fatmaagral@gmail.com', '05332466847', '2018-05-07', 'fatmaagralA', 'fatmaagrall', 12),
+('Nihal Er', 'nihaler@gmail.com', '05142583647', '2018-05-07', 'nihalerA', 'nihalerr', 13),
+('Ramazan Er', 'ramazaner@gmail.com', '05362412525', '2018-05-07', 'ramazanerA', 'ramazanner', 13),
+('Gül Er', 'guler@gmail.com', '05448962121', '2018-05-07', 'gulerrA', 'gulerrrr', 13),
+('Cüneyt Uslu', 'cuneytuslu@gmail.com', '05221486969', '2022-08-08', 'cuneyytusluA', 'cuneytt', 14),
+('Ayşe Uslu', 'ayseuslu@gmail.com', '05386981414', '2022-08-08', 'ayseusluuA', 'ayseee', 14),
+('Nisa Uslu', 'nisauslu@gmail.com', '05316980169', '2022-08-08', 'nisausluuA', 'nisaaaa', 14),
+('Nazmiye Naz', 'nazmiyenaz@gmail.com', '05456898134', '2024-01-10', 'nazmiyenazzA', 'nazmiyeee', 15),
+('Nil Naz', 'nilnaz@gmail.com', '05323166868', '2024-01-10', 'nilnazzA', 'nilll', 15),
+('Duru Naz', 'durunaz@gmail.com', '05483652525', '2024-01-10', 'durunazzA', 'duruuuuu', 15),
+('Emre Kaplan', 'emrekaplan@gmail.com', '05431234567', '2024-09-15', 'emrekaplanC', 'emreee123', 31),
+('Buse Kaplan', 'busekaplan@gmail.com', '05435678901', '2024-09-15', 'busekaplanC', 'busebuse12', 31),
+('Sami Karaca', 'samikaraca@gmail.com', '05326547896', '2022-07-20', 'samikaracaC', 'samikaraca07', 32),
+('Murat Karaca', 'muratkaraca@gmail.com', '05321478596', '2022-07-20', 'muratkaracaC', 'murat1234', 32),
+('Deniz Karaca', 'denizkaraca@gmail.com', '05321784563', '2022-07-20', 'denizkaracaC', 'denizCblok', 32),
+('Elif Arı', 'elifari@gmail.com', '05539874521', '2023-02-12', 'elifariC', 'elifariii12', 33),
+('Hakan Arı', 'hakanari@gmail.com', '05539874522', '2023-02-12', 'hakanariC', 'hakannn12', 33),
+('İlker Şahin', 'ilkersahin@gmail.com', '05051234567', '2021-06-18', 'ilkersahinC', 'ilkerpass', 34),
+('Sude Şahin', 'sudesahin@gmail.com', '05059874521', '2021-06-18', 'sudesahinC', 'sudeeemmmm', 34),
+('Ali Şahin', 'alisahin@gmail.com', '05059874522', '2021-06-18', 'alisahinC', 'alisahin123', 34),
+('Berat Yılmaz', 'beratyilmaz@gmail.com', '05487541236', '2022-11-11', 'beratyilmazC', 'beraty12', 35),
+('Zeynep Yılmaz', 'zeynepyilmaz@gmail.com', '05487541237', '2022-11-11', 'zeynepyilmazC', 'zeyneppC', 35),
+('Kübra Aslan', 'kubraaslan@gmail.com', '05231478569', '2020-03-23', 'kubraaslanC', 'kubracblok', 36),
+('Onur Aslan', 'onuraslan@gmail.com', '05231478568', '2020-03-23', 'onuraslanC', 'onuraslan12', 36),
+('Neşe Aslan', 'neseaslan@gmail.com', '05231478567', '2020-03-23', 'neseaslanC', 'nesepass', 36),
+('Ege Demir', 'egedemir@gmail.com', '05096543217', '2024-04-01', 'egedemirC', 'egeegeege', 37),
+('Selin Demir', 'selindemir@gmail.com', '05096543218', '2024-04-01', 'selindemirC', 'selindemirr', 37),
+('Gökhan Aydın', 'gokhanaydin@gmail.com', '05121478523', '2019-09-09', 'gokhanaydinC', 'gokhancpass', 38),
+('Melisa Aydın', 'melisaaydin@gmail.com', '05121478524', '2019-09-09', 'melisaaydinC', 'melisaydin', 38),
+('Aysun Efe', 'aysunefe@gmail.com', '05326578941', '2023-12-12', 'aysunefeC', 'aysunefe98', 39),
+('Umut Efe', 'umutefe@gmail.com', '05326578942', '2023-12-12', 'umutefeC', 'umutefepass', 39),
+('Duru Efe', 'duruufe@gmail.com', '05326578943', '2023-12-12', 'duruefeC', 'duruduru', 39),
+('Barış Kaya', 'bariskaya@gmail.com', '05239874651', '2020-08-08', 'bariskayaC', 'bariscblok', 40),
+('Duygu Kaya', 'duygukaya@gmail.com', '05239874652', '2020-08-08', 'duygukayaC', 'duyguCkaya', 40),
+('Sena Öz', 'senaoz@gmail.com', '05127894561', '2021-10-05', 'senaozC', 'senasenoz', 41),
+('Rıza Öz', 'rizaoz@gmail.com', '05127894562', '2021-10-05', 'rizaozC', 'rizaozblok', 41),
+('Ada Öz', 'adaoz@gmail.com', '05127894563', '2021-10-05', 'adaozC', 'adaada123', 41),
+('Mehmetcan Polat', 'mehmetcanpolat@gmail.com', '05432165487', '2025-01-25', 'mehmetcanpolatC', 'mehmet123', 42),
+('Ceren Polat', 'cerenpolat@gmail.com', '05432165488', '2025-01-25', 'cerenpolatC', 'cerencerenn', 42),
+('Tuğba Tunç', 'tugbatunc@gmail.com', '05521478569', '2023-03-03', 'tugbatuncC', 'tugbapass', 43),
+('İsmail Tunç', 'ismailtunc@gmail.com', '05521478570', '2023-03-03', 'ismailtuncC', 'ismailCpass', 43),
+('Yaren Tunç', 'yarentunc@gmail.com', '05521478571', '2023-03-03', 'yarentuncC', 'yarenblok', 43),
+('Oğuzhan Aksoy', 'oguzhanaksoy@gmail.com', '05387412569', '2022-05-15', 'oguzhanaksoyC', 'oguzoguz12', 44),
+('Dilara Aksoy', 'dilaraaksoy@gmail.com', '05387412570', '2022-05-15', 'dilaraaksoyC', 'dilarablok', 44),
+('Beyza Uğur', 'beyzaugur@gmail.com', '05047895632', '2024-06-06', 'beyzaugurC', 'beyzabeyza', 45),
+('Okan Uğur', 'okanugur@gmail.com', '05047895633', '2024-06-06', 'okanugurC', 'okanokan12', 45),
+('Yusuf Uğur', 'yusufugur@gmail.com', '05047895634', '2024-06-06', 'yusufugurC', 'yusufugur34', 45);
+
+
+
+INSERT INTO personel (sakin_id, pozisyon, blok_id)
+VALUES (16, 'Yonetici', 2),
+(41, 'Yonetici', 1),
+(96, 'Yonetici', 3);
+
+
+
+INSERT INTO aidatlar (daire_id, ay_yil, durum)
+VALUES 
+(1, '2025-01', 'Ödendi'),
+(2, '2025-01', 'Ödendi'),
+(3, '2025-01', 'Ödendi'),
+(4, '2025-01', 'Ödendi'),
+(5, '2025-01', 'Ödendi'),
+(6, '2025-01', 'Ödendi'),
+(7, '2025-01', 'Ödendi'),
+(8, '2025-01', 'Ödendi'),
+(9, '2025-01', 'Ödendi'),
+(10, '2025-01', 'Ödendi'),
+(11, '2025-01', 'Ödendi'),
+(12, '2025-01', 'Ödendi'),
+(13, '2025-01', 'Ödendi'),
+(14, '2025-01', 'Ödendi'),
+(15, '2025-01', 'Ödendi'),
+(16, '2025-01', 'Ödendi'),
+(17, '2025-01', 'Ödendi'),
+(18, '2025-01', 'Ödendi'),
+(19, '2025-01', 'Ödendi'),
+(20, '2025-01', 'Ödendi'),
+(21, '2025-01', 'Ödendi'),
+(22, '2025-01', 'Ödendi'),
+(23, '2025-01', 'Ödendi'),
+(24, '2025-01', 'Ödendi'),
+(25, '2025-01', 'Ödendi'),
+(26, '2025-01', 'Ödendi'),
+(27, '2025-01', 'Ödendi'),
+(28, '2025-01', 'Ödendi'),
+(29, '2025-01', 'Ödendi'),
+(30, '2025-01', 'Ödendi'),
+(31, '2025-01', 'Ödendi'),
+(32, '2025-01', 'Ödendi'),
+(33, '2025-01', 'Ödendi'),
+(34, '2025-01', 'Ödendi'),
+(35, '2025-01', 'Ödendi'),
+(36, '2025-01', 'Ödendi'),
+(37, '2025-01', 'Ödendi'),
+(38, '2025-01', 'Ödendi'),
+(39, '2025-01', 'Ödendi'),
+(40, '2025-01', 'Ödendi'),
+(41, '2025-01', 'Ödendi'),
+(42, '2025-01', 'Ödendi'),
+(43, '2025-01', 'Ödendi'),
+(44, '2025-01', 'Ödendi'),
+(45, '2025-01', 'Ödendi'),
+(1, '2025-02', 'Ödendi'),
+(2, '2025-02', 'Ödendi'),
+(3, '2025-02', 'Ödendi'),
+(4, '2025-02', 'Ödendi'),
+(5, '2025-02', 'Ödendi'),
+(6, '2025-02', 'Ödendi'),
+(7, '2025-02', 'Ödendi'),
+(8, '2025-02', 'Ödendi'),
+(9, '2025-02', 'Ödendi'),
+(10, '2025-02', 'Ödendi'),
+(11, '2025-02', 'Ödendi'),
+(12, '2025-02', 'Ödendi'),
+(13, '2025-02', 'Ödendi'),
+(14, '2025-02', 'Ödendi'),
+(15, '2025-02', 'Ödendi'),
+(16, '2025-02', 'Ödendi'),
+(17, '2025-02', 'Ödendi'),
+(18, '2025-02', 'Ödendi'),
+(19, '2025-02', 'Ödendi'),
+(20, '2025-02', 'Ödendi'),
+(21, '2025-02', 'Ödendi'),
+(22, '2025-02', 'Ödendi'),
+(23, '2025-02', 'Ödendi'),
+(24, '2025-02', 'Ödendi'),
+(25, '2025-02', 'Ödendi'),
+(26, '2025-02', 'Ödendi'),
+(27, '2025-02', 'Ödendi'),
+(28, '2025-02', 'Ödendi'),
+(29, '2025-02', 'Ödendi'),
+(30, '2025-02', 'Ödendi'),
+(31, '2025-02', 'Ödendi'),
+(32, '2025-02', 'Ödendi'),
+(33, '2025-02', 'Ödendi'),
+(34, '2025-02', 'Ödendi'),
+(35, '2025-02', 'Ödendi'),
+(36, '2025-02', 'Ödendi'),
+(37, '2025-02', 'Ödendi'),
+(38, '2025-02', 'Ödendi'),
+(39, '2025-02', 'Ödendi'),
+(40, '2025-02', 'Ödendi'),
+(41, '2025-02', 'Ödendi'),
+(42, '2025-02', 'Ödendi'),
+(43, '2025-02', 'Ödendi'),
+(44, '2025-02', 'Ödendi'),
+(45, '2025-02', 'Ödendi'),
+(1, '2025-03', 'Ödendi'),
+(2, '2025-03', 'Ödendi'),
+(3, '2025-03', 'Ödendi'),
+(4, '2025-03', 'Ödenmedi'),
+(5, '2025-03', 'Ödendi'),
+(6, '2025-03', 'Ödendi'),
+(7, '2025-03', 'Ödendi'),
+(8, '2025-03', 'Ödendi'),
+(9, '2025-03', 'Ödenmedi'),
+(10, '2025-03', 'Ödendi'),
+(11, '2025-03', 'Ödendi'),
+(12, '2025-03', 'Ödendi'),
+(13, '2025-03', 'Ödendi'),
+(14, '2025-03', 'Ödendi'),
+(15, '2025-03', 'Ödendi'),
+(16, '2025-03', 'Ödendi'),
+(17, '2025-03', 'Ödendi'),
+(18, '2025-03', 'Ödendi'),
+(19, '2025-03', 'Ödenmedi'),
+(20, '2025-03', 'Ödendi'),
+(21, '2025-03', 'Ödendi'),
+(22, '2025-03', 'Ödendi'),
+(23, '2025-03', 'Ödendi'),
+(24, '2025-03', 'Ödenmedi'),
+(25, '2025-03', 'Ödendi'),
+(26, '2025-03', 'Ödendi'),
+(27, '2025-03', 'Ödendi'),
+(28, '2025-03', 'Ödendi'),
+(29, '2025-03', 'Ödendi'),
+(30, '2025-03', 'Ödendi'),
+(31, '2025-03', 'Ödendi'),
+(32, '2025-03', 'Ödendi'),
+(33, '2025-03', 'Ödendi'),
+(34, '2025-03', 'Ödenmedi'),
+(35, '2025-03', 'Ödendi'),
+(36, '2025-03', 'Ödendi'),
+(37, '2025-03', 'Ödendi'),
+(38, '2025-03', 'Ödendi'),
+(39, '2025-03', 'Ödenmedi'),
+(40, '2025-03', 'Ödendi'),
+(41, '2025-03', 'Ödendi'),
+(42, '2025-03', 'Ödendi'),
+(43, '2025-03', 'Ödendi'),
+(44, '2025-03', 'Ödendi'),
+(45, '2025-03', 'Ödendi'),
+(1, '2025-04', 'Ödendi'),
+(2, '2025-04', 'Ödendi'),
+(3, '2025-04', 'Ödendi'),
+(4, '2025-04', 'Ödenmedi'),
+(5, '2025-04', 'Ödendi'),
+(6, '2025-04', 'Ödenmedi'),
+(7, '2025-04', 'Ödendi'),
+(8, '2025-04', 'Ödendi'),
+(9, '2025-04', 'Ödenmedi'),
+(10, '2025-04', 'Ödendi'),
+(11, '2025-04', 'Ödendi'),
+(12, '2025-04', 'Ödendi'),
+(13, '2025-04', 'Ödenmedi'),
+(14, '2025-04', 'Ödendi'),
+(15, '2025-04', 'Ödendi'),
+(16, '2025-04', 'Ödenmedi'),
+(17, '2025-04', 'Ödendi'),
+(18, '2025-04', 'Ödendi'),
+(19, '2025-04', 'Ödenmedi'),
+(20, '2025-04', 'Ödendi'),
+(21, '2025-04', 'Ödendi'),
+(22, '2025-04', 'Ödendi'),
+(23, '2025-04', 'Ödenmedi'),
+(24, '2025-04', 'Ödenmedi'),
+(25, '2025-04', 'Ödendi'),
+(26, '2025-04', 'Ödendi'),
+(27, '2025-04', 'Ödendi'),
+(28, '2025-04', 'Ödendi'),
+(29, '2025-04', 'Ödendi'),
+(30, '2025-04', 'Ödendi'),
+(31, '2025-04', 'Ödendi'),
+(32, '2025-04', 'Ödendi'),
+(33, '2025-04', 'Ödendi'),
+(34, '2025-04', 'Ödenmedi'),
+(35, '2025-04', 'Ödendi'),
+(36, '2025-04', 'Ödenmedi'),
+(37, '2025-04', 'Ödendi'),
+(38, '2025-04', 'Ödendi'),
+(39, '2025-04', 'Ödenmedi'),
+(40, '2025-04', 'Ödendi'),
+(41, '2025-04', 'Ödendi'),
+(42, '2025-04', 'Ödendi'),
+(43, '2025-04', 'Ödenmedi'),
+(44, '2025-04', 'Ödendi'),
+(45, '2025-04', 'Ödendi'),
+(1, '2025-05', 'Ödendi'),
+(2, '2025-05', 'Ödenmedi'),
+(3, '2025-05', 'Ödendi'),
+(4, '2025-05', 'Ödenmedi'),
+(5, '2025-05', 'Ödendi'),
+(6, '2025-05', 'Ödenmedi'),
+(7, '2025-05', 'Ödendi'),
+(8, '2025-05', 'Ödendi'),
+(9, '2025-05', 'Ödenmedi'),
+(10, '2025-05', 'Ödendi'),
+(11, '2025-05', 'Ödenmedi'),
+(12, '2025-05', 'Ödendi'),
+(13, '2025-05', 'Ödenmedi'),
+(14, '2025-05', 'Ödendi'),
+(15, '2025-05', 'Ödendi'),
+(16, '2025-05', 'Ödenmedi'),
+(17, '2025-05', 'Ödendi'),
+(18, '2025-05', 'Ödendi'),
+(19, '2025-05', 'Ödenmedi'),
+(20, '2025-05', 'Ödendi'),
+(21, '2025-05', 'Ödenmedi'),
+(22, '2025-05', 'Ödendi'),
+(23, '2025-05', 'Ödenmedi'),
+(24, '2025-05', 'Ödenmedi'),
+(25, '2025-05', 'Ödendi'),
+(26, '2025-05', 'Ödendi'),
+(27, '2025-05', 'Ödenmedi'),
+(28, '2025-05', 'Ödendi'),
+(29, '2025-05', 'Ödendi'),
+(30, '2025-05', 'Ödendi'),
+(31, '2025-05', 'Ödendi'),
+(32, '2025-05', 'Ödenmedi'),
+(33, '2025-05', 'Ödendi'),
+(34, '2025-05', 'Ödenmedi'),
+(35, '2025-05', 'Ödendi'),
+(36, '2025-05', 'Ödenmedi'),
+(37, '2025-05', 'Ödendi'),
+(38, '2025-05', 'Ödendi'),
+(39, '2025-05', 'Ödenmedi'),
+(40, '2025-05', 'Ödendi'),
+(41, '2025-05', 'Ödenmedi'),
+(42, '2025-05', 'Ödendi'),
+(43, '2025-05', 'Ödenmedi'),
+(44, '2025-05', 'Ödendi'),
+(45, '2025-05', 'Ödendi');
+
+
+INSERT INTO duyurular (baslik, icerik, tarih, hedef_blok_id) VALUES 
+('Mutlu Yıllar!', 'Tüm sakinlerimize mutlu yıllar dileriz :).', '2025-01-01 13:05:36', NULL),
+('Su Kesintisi', '15 Ocak tarihinde belediye çalışması sebebiyle 10:00 - 13:00 saatleri arasında su kesintisi olacaktır. Tüm sakinlerimize duyurulur.', '2025-01-14 09:16:47', NULL),
+('Aidat Hatırlatması', 'Ocak ayı aidat ödemelerimizi unutmayalım.', '2025-01-15 15:31:17', NULL),
+('Asansör Bakımı', 'B Blok asansörü 19 Şubat tarihinden 21 Şubat tarihine kadar bakımda olacaktır.', '2025-02-18 11:47:09', 2),
+('Aidat Hatırlatması', 'Şubat ayı aidat ödemelerimizi unutmayalım.', '2025-02-20 10:01:21', NULL),
+('Çöp Toplaması', 'A Blok  çöp çıkarımı bu haftalık akşam 9 dan sonra olacaktır.', '2025-03-02 19:13:39', 1),
+('Aidat Hatırlatması', 'Mart ayı aidat ödemelerimizi unutmayalım.', '2025-03-15 16:22:17', NULL),
+('Blok Temizliği', ' Temizlik görevlisi izinli olduğu için C Blok temizliği bu hafta yapılmayacaktır.', '2025-03-23 19:33:16', 3),
+('Aidat Hatırlatması', 'Mart ayı aidat ödemelerimizi unutmayalım.', '2025-04-15 09:05:26', NULL),
+('Deprem', 'Tüm sakinlerimize geçmiş olsun! Devam eden artçılar sebebiyle binalara girmemeye ve asansörleri kullanmamaya özen gösterelim.', '2025-04-23 13:14:56', NULL),
+('Asansör Bakımı', 'Depremler dolayısıyla tüm blok asansörlerinde genel bakım olacaktır. Tarihler duyurulacaktır', '2025-04-25 21:11:10', NULL),
+('Asansör Bakımı', 'C Blok asansör bakımı 8 Mayıs 13.00-17.00 saatleri arasında yapılacaktır', '2025-05-07 18:47:36', 3),
+('Asansör Bakımı', 'A Blok asansör bakımı 13 Mayıs 14.00-18.00 saatleri arasında yapılacaktır', '2025-05-12 20:05:09', 1),
+('Aidat Hatırlatması', 'Mayıs ayı aidat ödemelerimizi unutmayalım.', '2025-05-15 14:28:07', NULL),
+('Asansör Bakımı', 'B Blok asansör bakımı 17 Mayıs 13.00-17.00 saatleri arasında yapılacaktır', '2025-05-16 19:34:56', 2);
+
+
+
+INSERT INTO basvurular (sakin_id, tur, icerik, tarih) VALUES 
+(15, 'Oneri', 'Kapi zilleri değişsin, görüntülü sisteme geçilsin.', '2025-01-13 13:43:47'),
+(65, 'Talep', 'Merdiven dairesinin boyaları dökülüyor. Lütfen boyansın', '2025-01-10 13:43:47'),
+(97, 'Sikayet', 'Sular hala gelmedi. Mağduruz, sıkıntı çekiyoruz!', '2025-01-15 17:43:05'),
+(30, 'Talep', 'Çimler çok uzamış. Biçilsin lütfen', '2025-02-09 10:09:17'),
+(13, 'Sikayet', 'Gece gece asansörde kaldık. Lütfen bunun bir bakımı yapılsın artık.', '2025-02-17 14:16:21'),
+(55, 'Sikayet', 'Kapıcı çok asabi. Uyarır mısınız?', '2025-02-23 18:19:21'),
+(102, 'Talep', 'Apartmanda çok fazla böcek var. İlaçlama yapılsın lütfen', '2025-02-20 19:01:34'),
+(24, 'Oneri', 'Giriş kapısının kolu eskimiş, değiştirilebilir.', '2025-03-02 16:04:47'),
+(71, 'Talep', 'B bloğun diafonu değiştirilmiş. Biz de isteriz', '2025-03-14 09:39:00'),
+(117, 'Sikayet', 'Kameranın ışığını yanmıyor. Bozulmuş sanırım lütfen yaptırın', '2025-03-18 19:22:34'),
+(18, 'Oneri', 'Banyo giderinden kanalizasyon kokusu geliyor. Bakım yapılmalı', '2025-03-17 14:16:21'),
+(27, 'Sikayet', 'Banyodan koku geliyor.', '2025-02-17 18:21:05'),
+(7, 'Talep', 'Banyo kanalizasyon kokuyor. Bir an önce bakım yapılsın.', '2025-03-18 15:19:21'),
+(93, 'Talep', 'Yaşadığımız deprem sonrası asansörde bir bakım yapılmalı.', '2025-04-24 18:09:17'),
+(53, 'Oneri', 'Deprem kaynaklı asansörde bir hasar olup olmadığına bakılabilir.', '2025-04-24 11:07:23'),
+(18, 'Oneri', 'Banyo giderlerinden kanalizasyon kokusu geliyor. Bakım yapılmalı', '2025-02-17 14:16:21'),
+(47, 'Sikayet', 'Asansor bakımları hala yapılmadı', '2025-05-11 13:03:24'),
+(4, 'Sikayet', 'Üst katımdan çok ses geliyor. Rahatsız oluyorum.', '2025-05-13 23:28:02');
+
+
+
+
+
+
+CREATE INDEX idx_daireler_blok_id ON daireler(blok_id);
+CREATE INDEX idx_sakinler_daire_id ON sakinler(daire_id);
+CREATE INDEX idx_duyurular_hedef_blok_id ON duyurular(hedef_blok_id);
+CREATE INDEX idx_basvurular_sakin_id ON basvurular(sakin_id);
+CREATE INDEX idx_aidatlar_daire_id_ay_yil ON aidatlar(daire_id, ay_yil);
+CREATE INDEX idx_personel_sakin_id_blok_id ON personel(sakin_id, blok_id);
+
+
+CREATE VIEW yonetici_aidat_durum AS
+SELECT s.sakin_id, s.ad_soyad, b.blok_adi, d.daire_numarasi, a.ay_yil, a.durum
+FROM sakinler s
+JOIN daireler d ON s.daire_id = d.daire_id
+JOIN bloklar b ON d.blok_id = b.blok_id
+LEFT JOIN aidatlar a ON d.daire_id = a.daire_id
+WHERE b.blok_id = (SELECT blok_id FROM personel WHERE sakin_id = s.sakin_id AND pozisyon = 'Yonetici' LIMIT 1);
+
+
+DELIMITER $$
+CREATE TRIGGER before_sakin_insert
+BEFORE INSERT ON sakinler
+FOR EACH ROW
+BEGIN
+    IF NEW.kayit_tarihi IS NULL THEN
+        SET NEW.kayit_tarihi = CURDATE();
+    END IF;
+END$$
+DELIMITER ;
