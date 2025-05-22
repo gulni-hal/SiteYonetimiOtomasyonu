@@ -114,7 +114,7 @@ A bloğu yöneticisi olarak giriş yapmak için
 
 
 B bloğu yöneticisi olarak giriş yapmak için
-- Kullanıcı Adı: `gulni.erulsu`
+- Kullanıcı Adı: `gulni.eruslu`
 - Parola: `Parola123.`
 
 
